@@ -5,108 +5,128 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI内容工坊 - 批量内容生成服务</title>
     <style>
+        :root {
+            --bg: #0d1117;
+            --surface: #161b22;
+            --surface-hover: #1c2128;
+            --border: #30363d;
+            --primary: #58a6ff;
+            --primary-hover: #79b8ff;
+            --text: #c9d1d9;
+            --text-muted: #8b949e;
+        }
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', -apple-system, sans-serif;
+            background: var(--bg);
             min-height: 100vh;
-            color: #fff;
+            color: var(--text);
+            line-height: 1.5;
         }
         .container {
-            max-width: 600px;
+            max-width: 560px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 40px 20px;
         }
         h1 {
             text-align: center;
-            font-size: 28px;
-            margin-bottom: 10px;
-            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 24px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
         }
         .subtitle {
             text-align: center;
-            color: #888;
-            margin-bottom: 30px;
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 32px;
         }
         .products {
-            display: grid;
-            gap: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
         .product {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
             padding: 20px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: background 0.15s, border-color 0.15s;
         }
         .product:hover {
-            background: rgba(255,255,255,0.1);
-            transform: translateY(-2px);
+            background: var(--surface-hover);
+            border-color: var(--text-muted);
         }
         .product-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         .product-name {
-            font-size: 18px;
-            font-weight: 600;
+            font-size: 15px;
+            font-weight: 500;
+            color: #fff;
         }
         .product-price {
-            font-size: 24px;
-            font-weight: 700;
-            color: #00d2ff;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--primary);
         }
         .product-desc {
-            color: #aaa;
-            font-size: 14px;
-            line-height: 1.6;
+            color: var(--text-muted);
+            font-size: 13px;
+            line-height: 1.5;
         }
         .product-tags {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             margin-top: 12px;
-            flex-wrap: wrap;
         }
         .tag {
-            background: rgba(0,210,255,0.2);
-            color: #00d2ff;
-            padding: 4px 12px;
-            border-radius: 20px;
-            fontpx;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
         }
--size: 12        .order-form {
+        .order-form {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.8);
             z-index: 100;
             padding: 20px;
             overflow-y: auto;
         }
         .order-form.show {
-            display: block;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 60px;
         }
         .form-card {
-            background: #1a1a2e;
-            border-radius: 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
             padding: 24px;
-            max-width: 500px;
-            margin: 40px auto;
+            width: 100%;
+            max-width: 400px;
         }
         .form-title {
-            font-size: 20px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
             margin-bottom: 20px;
             text-align: center;
         }
@@ -115,103 +135,122 @@
         }
         .form-group label {
             display: block;
-            margin-bottom: 8px;
-            color: #aaa;
+            margin-bottom: 6px;
+            color: var(--text-muted);
+            font-size: 13px;
         }
         .form-group input,
         .form-group select,
         .form-group textarea {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #333;
-            border-radius: 8px;
-            background: #0f0f1a;
-            color: #fff;
-            font-size: 16px;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 14px;
+            transition: border-color 0.15s;
         }
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: #00d2ff;
+            border-color: var(--primary);
         }
         .btn {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: background 0.15s, opacity 0.15s;
         }
         .btn-primary {
-            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
-            color: #fff;
+            background: var(--primary);
+            color: #000;
         }
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(0,210,255,0.3);
+            background: var(--primary-hover);
         }
         .btn-secondary {
             background: transparent;
-            border: 1px solid #666;
-            color: #aaa;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
             margin-top: 10px;
         }
+        .btn-secondary:hover {
+            border-color: var(--text-muted);
+            color: var(--text);
+        }
         .stats {
-            background: rgba(255,255,255,0.05);
-            border-radius: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
             padding: 16px;
-            margin-bottom: 20px;
+            margin-bottom: 32px;
             display: flex;
-            justify-content: space-around;
         }
         .stat {
+            flex: 1;
             text-align: center;
+            border-right: 1px solid var(--border);
+        }
+        .stat:last-child {
+            border-right: none;
         }
         .stat-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: #00d2ff;
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
         }
         .stat-label {
-            font-size: 12px;
-            color: #888;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
         }
         .contact {
             text-align: center;
-            margin-top: 30px;
+            margin-top: 32px;
             padding: 20px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
         }
         .contact-title {
-            color: #aaa;
-            margin-bottom: 10px;
+            color: var(--text-muted);
+            font-size: 12px;
+            margin-bottom: 8px;
         }
         .wechat-id {
-            font-size: 18px;
-            color: #00d2ff;
-            font-weight: 600;
+            font-size: 14px;
+            color: #fff;
+            font-weight: 500;
         }
         .success-message {
             display: none;
             text-align: center;
-            padding: 40px;
+            padding: 40px 20px;
         }
         .success-message.show {
             display: block;
         }
         .success-icon {
-            font-size: 60px;
-            margin-bottom: 20px;
+            font-size: 40px;
+            margin-bottom: 16px;
+        }
+        .success-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 8px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🤖 AI内容工坊</h1>
+        <h1>AI内容工坊</h1>
         <p class="subtitle">批量内容生成服务 | 24小时极速交付</p>
         
         <div class="stats">
@@ -232,7 +271,7 @@
         <div class="products">
             <div class="product" onclick="showOrderForm('小红书爆款标题', 99)">
                 <div class="product-header">
-                    <span class="product-name">📕 小红书爆款标题</span>
+                    <span class="product-name">小红书爆款标题</span>
                     <span class="product-price">¥99</span>
                 </div>
                 <p class="product-desc">50条爆款标题，涵盖多种风格，可直接复制使用</p>
@@ -245,7 +284,7 @@
             
             <div class="product" onclick="showOrderForm('小红书正文种草', 199)">
                 <div class="product-header">
-                    <span class="product-name">📕 小红书正文种草</span>
+                    <span class="product-name">小红书正文种草</span>
                     <span class="product-price">¥199</span>
                 </div>
                 <p class="product-desc">20篇高质量种草文案，包含痛点、解决方案、使用体验</p>
@@ -258,7 +297,7 @@
             
             <div class="product" onclick="showOrderForm('抖音短视频脚本', 149)">
                 <div class="product-header">
-                    <span class="product-name">🎬 抖音短视频脚本</span>
+                    <span class="product-name">抖音短视频脚本</span>
                     <span class="product-price">¥149</span>
                 </div>
                 <p class="product-desc">10条短视频脚本，包含开头钩子、脚本正文、结尾引导</p>
@@ -271,7 +310,7 @@
             
             <div class="product" onclick="showOrderForm('知乎专业问答', 299)">
                 <div class="product-header">
-                    <span class="product-name">💬 知乎专业问答</span>
+                    <span class="product-name">知乎专业问答</span>
                     <span class="product-price">¥299</span>
                 </div>
                 <p class="product-desc">5篇高质量问答回答，专业深度，利于打造个人IP</p>
@@ -284,7 +323,7 @@
             
             <div class="product" onclick="showOrderForm('全平台内容套餐', 499)">
                 <div class="product-header">
-                    <span class="product-name">🎁 全平台内容套餐</span>
+                    <span class="product-name">全平台内容套餐</span>
                     <span class="product-price">¥499</span>
                 </div>
                 <p class="product-desc">小红书50条 + 抖音20条 + 知乎10条，一站式内容库</p>
@@ -299,7 +338,7 @@
         <div class="contact">
             <p class="contact-title">联系我们下单</p>
             <p class="wechat-id">添加微信：RANDY-AI</p>
-            <p style="color:#666;font-size:12px;margin-top:10px">备注"内容下单"</p>
+            <p style="color:var(--text-muted);font-size:12px;margin-top:8px">备注"内容下单"</p>
         </div>
     </div>
     
@@ -310,11 +349,11 @@
                 <div class="form-group">
                     <label>选择服务</label>
                     <select id="serviceType" required>
-                        <option value="小红书爆款标题">📕 小红书爆款标题 - ¥99</option>
-                        <option value="小红书正文种草">📕 小红书正文种草 - ¥199</option>
-                        <option value="抖音短视频脚本">🎬 抖音短视频脚本 - ¥149</option>
-                        <option value="知乎专业问答">💬 知乎专业问答 - ¥299</option>
-                        <option value="全平台内容套餐">🎁 全平台内容套餐 - ¥499</option>
+                        <option value="小红书爆款标题">小红书爆款标题 - ¥99</option>
+                        <option value="小红书正文种草">小红书正文种草 - ¥199</option>
+                        <option value="抖音短视频脚本">抖音短视频脚本 - ¥149</option>
+                        <option value="知乎专业问答">知乎专业问答 - ¥299</option>
+                        <option value="全平台内容套餐">全平台内容套餐 - ¥499</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -335,12 +374,12 @@
         </div>
         
         <div class="success-message" id="successMessage">
-            <div class="success-icon">✅</div>
-            <h2>订单提交成功！</h2>
-            <p style="color:#888;margin-top:10px">我们会在24小时内完成内容生成</p>
-            <p style="color:#00d2ff;margin-top:20px">请添加微信：RANDY-AI</p>
-            <p style="color:#666;font-size:12px;margin-top:5px">备注您的微信号以便发送内容</p>
-            <button class="btn btn-primary" style="margin-top:30px" onclick="hideOrderForm()">关闭</button>
+            <div class="success-icon">✓</div>
+            <div class="success-title">订单已提交</div>
+            <p style="color:var(--text-muted);font-size:13px;margin-top:8px">我们会在24小时内完成内容生成</p>
+            <p style="color:var(--primary);margin-top:20px;font-size:14px">请添加微信：RANDY-AI</p>
+            <p style="color:var(--text-muted);font-size:12px;margin-top:4px">备注您的微信号以便发送内容</p>
+            <button class="btn btn-primary" style="margin-top:24px" onclick="hideOrderForm()">关闭</button>
         </div>
     </div>
     
