@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI内容工坊 - 批量内容生成服务</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+        }
+        .products {
+            display: grid;
+            gap: 16px;
+        }
+        .product {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .product:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+        }
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .product-name {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .product-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: #00d2ff;
+        }
+        .product-desc {
+            color: #aaa;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .product-tags {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+        .tag {
+            background: rgba(0,210,255,0.2);
+            color: #00d2ff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            fontpx;
+        }
+-size: 12        .order-form {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 100;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .order-form.show {
+            display: block;
+        }
+        .form-card {
+            background: #1a1a2e;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 500px;
+            margin: 40px auto;
+        }
+        .form-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #aaa;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            background: #0f0f1a;
+            color: #fff;
+            font-size: 16px;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #00d2ff;
+        }
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+            color: #fff;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,210,255,0.3);
+        }
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid #666;
+            color: #aaa;
+            margin-top: 10px;
+        }
+        .stats {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-around;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #00d2ff;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #888;
+        }
+        .contact {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+        }
+        .contact-title {
+            color: #aaa;
+            margin-bottom: 10px;
+        }
+        .wechat-id {
+            font-size: 18px;
+            color: #00d2ff;
+            font-weight: 600;
+        }
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+        .success-message.show {
+            display: block;
+        }
+        .success-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 AI内容工坊</h1>
+        <p class="subtitle">批量内容生成服务 | 24小时极速交付</p>
+        
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value">24h</div>
+                <div class="stat-label">交付时间</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">100+</div>
+                <div class="stat-label">单日产量</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">¥99</div>
+                <div class="stat-label">起售价</div>
+            </div>
+        </div>
+        
+        <div class="products">
+            <div class="product" onclick="showOrderForm('小红书爆款标题', 99)">
+                <div class="product-header">
+                    <span class="product-name">📕 小红书爆款标题</span>
+                    <span class="product-price">¥99</span>
+                </div>
+                <p class="product-desc">50条爆款标题，涵盖多种风格，可直接复制使用</p>
+                <div class="product-tags">
+                    <span class="tag">小红书</span>
+                    <span class="tag">标题</span>
+                    <span class="tag">即买即用</span>
+                </div>
+            </div>
+            
+            <div class="product" onclick="showOrderForm('小红书正文种草', 199)">
+                <div class="product-header">
+                    <span class="product-name">📕 小红书正文种草</span>
+                    <span class="product-price">¥199</span>
+                </div>
+                <p class="product-desc">20篇高质量种草文案，包含痛点、解决方案、使用体验</p>
+                <div class="product-tags">
+                    <span class="tag">小红书</span>
+                    <span class="tag">正文</span>
+                    <span class="tag">原创</span>
+                </div>
+            </div>
+            
+            <div class="product" onclick="showOrderForm('抖音短视频脚本', 149)">
+                <div class="product-header">
+                    <span class="product-name">🎬 抖音短视频脚本</span>
+                    <span class="product-price">¥149</span>
+                </div>
+                <p class="product-desc">10条短视频脚本，包含开头钩子、脚本正文、结尾引导</p>
+                <div class="product-tags">
+                    <span class="tag">抖音</span>
+                    <span class="tag">脚本</span>
+                    <span class="tag">60秒</span>
+                </div>
+            </div>
+            
+            <div class="product" onclick="showOrderForm('知乎专业问答', 299)">
+                <div class="product-header">
+                    <span class="product-name">💬 知乎专业问答</span>
+                    <span class="product-price">¥299</span>
+                </div>
+                <p class="product-desc">5篇高质量问答回答，专业深度，利于打造个人IP</p>
+                <div class="product-tags">
+                    <span class="tag">知乎</span>
+                    <span class="tag">问答</span>
+                    <span class="tag">专业</span>
+                </div>
+            </div>
+            
+            <div class="product" onclick="showOrderForm('全平台内容套餐', 499)">
+                <div class="product-header">
+                    <span class="product-name">🎁 全平台内容套餐</span>
+                    <span class="product-price">¥499</span>
+                </div>
+                <p class="product-desc">小红书50条 + 抖音20条 + 知乎10条，一站式内容库</p>
+                <div class="product-tags">
+                    <span class="tag">全平台</span>
+                    <span class="tag">套餐</span>
+                    <span class="tag">超值</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="contact">
+            <p class="contact-title">联系我们下单</p>
+            <p class="wechat-id">添加微信：RANDY-AI</p>
+            <p style="color:#666;font-size:12px;margin-top:10px">备注"内容下单"</p>
+        </div>
+    </div>
+    
+    <div class="order-form" id="orderForm">
+        <div class="form-card" id="formCard">
+            <h2 class="form-title" id="formTitle">下单</h2>
+            <form id="orderFormData">
+                <div class="form-group">
+                    <label>选择服务</label>
+                    <select id="serviceType" required>
+                        <option value="小红书爆款标题">📕 小红书爆款标题 - ¥99</option>
+                        <option value="小红书正文种草">📕 小红书正文种草 - ¥199</option>
+                        <option value="抖音短视频脚本">🎬 抖音短视频脚本 - ¥149</option>
+                        <option value="知乎专业问答">💬 知乎专业问答 - ¥299</option>
+                        <option value="全平台内容套餐">🎁 全平台内容套餐 - ¥499</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>主题/关键词</label>
+                    <input type="text" id="topic" placeholder="例如：美妆护肤、职场成长" required>
+                </div>
+                <div class="form-group">
+                    <label>微信号（用于发送内容）</label>
+                    <input type="text" id="wechat" placeholder="请输入您的微信号" required>
+                </div>
+                <div class="form-group">
+                    <label>补充说明（可选）</label>
+                    <textarea id="note" rows="3" placeholder="有任何特殊要求可以在这里说明"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">提交订单</button>
+                <button type="button" class="btn btn-secondary" onclick="hideOrderForm()">取消</button>
+            </form>
+        </div>
+        
+        <div class="success-message" id="successMessage">
+            <div class="success-icon">✅</div>
+            <h2>订单提交成功！</h2>
+            <p style="color:#888;margin-top:10px">我们会在24小时内完成内容生成</p>
+            <p style="color:#00d2ff;margin-top:20px">请添加微信：RANDY-AI</p>
+            <p style="color:#666;font-size:12px;margin-top:5px">备注您的微信号以便发送内容</p>
+            <button class="btn btn-primary" style="margin-top:30px" onclick="hideOrderForm()">关闭</button>
+        </div>
+    </div>
+    
+    <script>
+        function showOrderForm(productName, price) {
+            document.getElementById('orderForm').classList.add('show');
+            document.getElementById('formCard').style.display = 'block';
+            document.getElementById('successMessage').classList.remove('show');
+            document.getElementById('formTitle').textContent = productName;
+            document.getElementById('serviceType').value = productName;
+        }
+        
+        function hideOrderForm() {
+            document.getElementById('orderForm').classList.remove('show');
+        }
+        
+        document.getElementById('orderFormData').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const data = {
+                service: document.getElementById('serviceType').value,
+                topic: document.getElementById('topic').value,
+                wechat: document.getElementById('wechat').value,
+                note: document.getElementById('note').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            console.log('Order submitted:', data);
+            
+            document.getElementById('formCard').style.display = 'none';
+            document.getElementById('successMessage').classList.add('show');
+            
+            fetch('https://httpbin.org/post', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            }).catch(() => {});
+        });
+    </script>
+</body>
+</html>
